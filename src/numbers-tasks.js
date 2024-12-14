@@ -129,10 +129,7 @@ function getAngleBetweenVectors(x1, y1, x2, y2) {
  *     0     => 0
  */
 function getLastDigit(val) {
-  const strVal = String(val);
-  const lastStr = strVal.at(-1);
-
-  return Number(lastStr);
+  return val % 10;
 }
 
 /**
@@ -381,21 +378,7 @@ function numberToStringInBase(number, base) {
  * 12345, 2    => '1.23e+4'
  */
 function toExponential(number, fractionDigits) {
-  const str = String(number);
-  let grade = 0;
-  if (str.at(0) === '-') {
-    grade = str.length - 3;
-  } else {
-    grade = str.length - 2;
-  }
-
-  const divider = 10 ** grade;
-
-  let result = number / divider;
-  result = result.toFixed(fractionDigits + 1) / 10;
-  result = result.toFixed(fractionDigits);
-
-  return `${result}e+${grade + 1}`;
+  return number.toExponential(fractionDigits);
 }
 
 /**
@@ -426,10 +409,7 @@ function toFixed(number, fractionDigits) {
  * 12.345, 4   => '12.35'
  */
 function toPrecision(number, precision) {
-  const numRound = Math.round(number);
-  const str = String(numRound);
-  const fractionDigits = precision - str.length;
-  return Number(number.toFixed(fractionDigits));
+  return number.toPrecision(precision);
 }
 
 /**
@@ -443,7 +423,7 @@ function toPrecision(number, precision) {
  * Number(-5)    => -5
  */
 function getNumberValue(number) {
-  return +number;
+  return number.valueOf();
 }
 
 /**
@@ -462,7 +442,7 @@ function getNumberValue(number) {
  * '5'      => false
  */
 function isNumber(number) {
-  if (typeof number === 'number' && number - number === 0) {
+  if (Number.isFinite(number)) {
     return true;
   }
   return false;
@@ -480,10 +460,10 @@ function isNumber(number) {
  * '5'  => false
  */
 function isInteger(number) {
-  if (!(number % 1 === 0) || typeof number === 'string') {
-    return false;
+  if (Number.isInteger(number)) {
+    return true;
   }
-  return true;
+  return false;
 }
 
 /**
@@ -497,7 +477,7 @@ function isInteger(number) {
  * 'abcdefgh'      => NaN
  */
 function getFloatOnString(str) {
-  return parseFloat(str);
+  return Number.parseFloat(str);
 }
 
 /**
@@ -514,8 +494,8 @@ function getFloatOnString(str) {
  * '1.234', 2           => 1
  * '10', 8              => 8
  */
-function getIntegerOnString(/* str, base */) {
-  throw new Error('Not implemented');
+function getIntegerOnString(str, base) {
+  return Number.parseInt(str, base);
 }
 
 /**
@@ -529,8 +509,8 @@ function getIntegerOnString(/* str, base */) {
  * 3.5      => false
  * 2 ** 53  => false
  */
-function isSafeInteger(/* number */) {
-  throw new Error('Not implemented');
+function isSafeInteger(number) {
+  return Number.isSafeInteger(number);
 }
 
 /**
